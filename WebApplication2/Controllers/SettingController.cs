@@ -9,10 +9,11 @@ namespace WebApplication2.Controllers
     public class SettingController : ControllerBase
     {
         List<Student> listOfStudent;
+        List<Course> listOfCourse;
         public SettingController()
         {
             FilListOfStudent();
-
+            FillCourses();
             //{
             //    "id": "5",
             //    "name": "Ali",
@@ -58,17 +59,43 @@ namespace WebApplication2.Controllers
                 listOfStudent.Add(student);
             }
         }
-
+        void FillCourses()
+        {
+            listOfCourse = new List<Course>();
+            for (int i = 1; i <= 10; i++)
+            {
+                Random random = new Random();
+                string serialNumber = "";
+                for (int s = 0; s < 10; s++)
+                {
+                    serialNumber += random.Next(0, 10);
+                }
+                var course = new Course();
+                course.Id = i;
+                course.Name = "Course_" + i;
+                course.SerialNumber = serialNumber;
+                listOfCourse.Add(course);
+            }
+        }
         [HttpGet("Get10Student")]
         public IActionResult Get10Student()
         {
             if (listOfStudent == null || !listOfStudent.Any())
             {
                 return NotFound();
-        }
+            }
             return Ok(listOfStudent);
         }
 
+        [HttpGet("GetCourses")]
+        public IActionResult GetCourses()
+        {
+            if (listOfCourse == null || !listOfCourse.Any())
+            {
+                return NotFound();
+            }
+            return Ok(listOfCourse);
+        }
 
         [HttpGet("Find/{id}")]
         public IActionResult FindStudent(int id)
@@ -126,16 +153,16 @@ namespace WebApplication2.Controllers
             return false;
         }
 
-        [HttpDelete] 
+        [HttpDelete]
         public IActionResult DeleteStudent(int id)
         {
             var student = FindStudentById(id);
-           if (student != null)
-           {
-               listOfStudent.Remove(student);
-               return Ok(listOfStudent);
-           }
-           return NotFound();
+            if (student != null)
+            {
+                listOfStudent.Remove(student);
+                return Ok(listOfStudent);
+            }
+            return NotFound();
         }
 
     }
